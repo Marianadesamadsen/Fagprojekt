@@ -1,5 +1,5 @@
 function  [ Gfm_vec , G_prev , flag, zero_one ] = ...
-            GRID( delta_G , G , tau, tspan , G_prev , Gmin, Gfm_vec , t_vec, flag)
+            GRID_func( delta_G , G , tau, tspan , G_prev , Gmin, Gfm_vec , t_vec, flag)
 %        
 % GOAL:
 % Making the GRID function, which outputs 0 or 1 depending on having

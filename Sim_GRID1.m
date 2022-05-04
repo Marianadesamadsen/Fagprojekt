@@ -73,17 +73,17 @@ tMeal1           = 7*h2min;          % [min]
 tMeal2           = 12*h2min;
 tMeal3           = 18*h2min;
 tSnack1          = 15*h2min;
-tSnakc2          = 10*h2min;   
+tSnack2          = 10*h2min;   
 idxMeal1         = tMeal1  /Ts + 1;   % [#]
 idxMeal2         = tMeal2  /Ts + 1;   % [#]
 idxMeal3         = tMeal3  /Ts + 1;   % [#]
 idxSnack1        = tSnack1 /Ts + 1;   
 idxSnack2        = tSnack2 /Ts + 1;
-idxSnack3        = tSnack3 /Ts + 1;
+
 
 %% Making meal sizes with respectivly bolus sizes
 
- meals=[50,70,10,120,40,80,110,90,60];
+meals=[50,70,10,120,40,80,110,90,60];
 % meals=[50,70,120,80,110,90,60];
 % bolus=[6,8,2,12,5,9,12,10,7];
 bolus=zeros(1,length(meals)); % Bolus is zero because we will detect meals
@@ -116,7 +116,6 @@ G = CGMsensor(X, p); % [mg/dL]
 
 %% GRID
 
-%  
 prev_vec = zeros(length(G),2);
 Gf_vec = zeros(length(G),2);
 
