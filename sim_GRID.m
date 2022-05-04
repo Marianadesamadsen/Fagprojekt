@@ -79,7 +79,8 @@ idxMeal3         = tMeal3  /Ts + 1;   % [#]
 %% Making meal sizes with respectivly bolus sizes
 
 meals=[50,70,10,120,40,80,110,90,60];
-bolus=[6,8,2,12,5,9,12,10,7];
+%bolus=[6,8,2,12,5,9,12,10,7];
+bolus=zeros(1,length(meals));
 
 %% Inserting the meal sizes at the different hours/index
 
@@ -113,7 +114,7 @@ G = CGMsensor(X, p); % [mg/dL]
 prev_vec = zeros(length(G),2);
 Gf_vec = zeros(length(G),2);
 
-G_grid = [0,0,G(1)];
+G_grid = [G(1),G(1),G(1)];
 delta_G = 15;
 tspan2 = 5;
 t_vec = [5,10,15];
@@ -124,7 +125,7 @@ tau = 6;
 [ Gf_vec(2,:) , prev_vec(2,:) , zero_one(2) ] = GRID( delta_G , G_grid , tau, tspan2 , ...
                                     prev_vec(1,:) , Gmin, Gf_vec(1,:) , t_vec );
                                 
-                                G_grid=[0,G(1),G(2)];
+                                G_grid=[G(1),G(1),G(2)];
                                 
 [ Gf_vec(3,:) , prev_vec(3,:) , zero_one(3) ] = GRID( delta_G , G_grid , tau, tspan2 , ...
                                     prev_vec(2,:) , Gmin, Gf_vec(2,:) , t_vec );
@@ -147,28 +148,35 @@ end
 figure;
 
 % Plot blood glucose concentration
-subplot(411);
+subplot(511);
 plot(T*min2h, G);
 xlim([t0, tf]*min2h);
 ylabel({'Blood glucose concentration', '[mg/dL]'});
 
 % Plot meal carbohydrate
-subplot(412);
+subplot(512);
 stem(tspan(1:end-1)*min2h, Ts*D(1, :), 'MarkerSize', 0.1);
 xlim([t0, tf]*min2h);
 ylabel({'Meal carbohydrates', '[g CHO]'});
 
 % Plot basal insulin flow rate
-subplot(413);
+subplot(513);
 stairs(tspan*min2h, U(1, [1:end, end]));
 xlim([t0, tf]*min2h);
 ylabel({'Basal insulin', '[mU/min]'});
 
 % Plot bolus insulin
-subplot(414);
+subplot(514);
 stem(tspan(1:end-1)*min2h, Ts*mU2U*U(2, :), 'MarkerSize', 1);
 xlim([t0, tf]*min2h);
 ylabel({'Bolus insulin', '[U]'}); 
+xlabel('Time [h]');
+
+% Plot detected Meals
+subplot(515);
+stem(tspan(1:end-1)*min2h,zero_one, 'MarkerSize', 1);
+xlim([t0, tf]*min2h);
+ylabel({'detected meal', '[U]'}); 
 xlabel('Time [h]'); 
  
 

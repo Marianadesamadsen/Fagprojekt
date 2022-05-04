@@ -65,7 +65,9 @@ end
 G_prev = [Gfns,Gf]; % The previous for: Gfns-1 and Gf-1 eq. 1 & 2
 Gfm_vec = [Gfm,Gfm_m1]; % The previous for: Gfm-m1 and Gfm-m2
 
+
 end
+
 
 
 
