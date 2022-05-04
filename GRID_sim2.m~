@@ -1,6 +1,6 @@
 %% Simulation test of the GRID algorithm 
 
-% Simulating 3 meals and 2 snacks on 30 days, and detecting the meals
+% Simulating 3 meals on 30 days, and detecting the meals
 % by using x0 based on the steadystate vector
 
 clear all 
@@ -73,12 +73,13 @@ tMeal1           = 7*h2min;          % [min]
 tMeal2           = 12*h2min;
 tMeal3           = 18*h2min;
 tSnack1          = 15*h2min;
-tSnack2          = 10*h2min;   
+tSnakc2          = 10*h2min;   
 idxMeal1         = tMeal1  /Ts + 1;   % [#]
 idxMeal2         = tMeal2  /Ts + 1;   % [#]
 idxMeal3         = tMeal3  /Ts + 1;   % [#]
 idxSnack1        = tSnack1 /Ts + 1;   
 idxSnack2        = tSnack2 /Ts + 1;
+idxSnack3        = tSnack3 /Ts + 1;
 
 %% Making meal sizes with respectivly bolus sizes
 
@@ -89,7 +90,7 @@ idxSnack2        = tSnack2 /Ts + 1;
 
 bolus = 0;
 meal  = randi([50,150],1,90);
-snack = 20;
+Snack = 20;
 
 %% Inserting the meal sizes at the different hours/index
 
@@ -98,19 +99,12 @@ snack = 20;
 for i = 0:29
     
     % Inserting the different meal sizes at the indcies 
-        D(1, (idxMeal1+24*h2min/Ts*i))   = meal(1+3*i)     /Ts;       % [g CHO/min]
+        D(1, (idxMeal1+24*h2min/Ts*i))   = meals(1+3*i)     /Ts;       % [g CHO/min]
         U(2, (idxMeal1+24*h2min/Ts*i))   = bolus*U2mU/Ts;  
-        D(1, (idxMeal2+24*h2min/Ts*i))   = meal(2+3*i)     /Ts;       % [g CHO/min]
+        D(1, (idxMeal2+24*h2min/Ts*i))   = meals(2+i)     /Ts;       % [g CHO/min]
         U(2, (idxMeal2+24*h2min/Ts*i))   = bolus*U2mU/Ts;  
-        D(1, (idxMeal3+24*h2min/Ts*i))   = meal(3+3*i)     /Ts;       % [g CHO/min]
+        D(1, (idxMeal3+24*h2min/Ts*i))   = meals(3+i)     /Ts;       % [g CHO/min]
         U(2, (idxMeal3+24*h2min/Ts*i))   = bolus*U2mU/Ts;  
-        
-    % Inserting the different meal sizes at the indcies 
-        D(1, (idxSnack1+24*h2min/Ts*i))   = snack     /Ts;       % [g CHO/min]
-        U(2, (idxSnack1+24*h2min/Ts*i))   = bolus*U2mU/Ts;  
-        D(1, (idxSnack2+24*h2min/Ts*i))   = snack    /Ts;       % [g CHO/min]
-        U(2, (idxSnack2+24*h2min/Ts*i))   = bolus*U2mU/Ts;  
-        
 end
 
 %% Simulating the control states
