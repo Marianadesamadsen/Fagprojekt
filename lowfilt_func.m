@@ -1,4 +1,8 @@
 function Gf_ctrlstate = lowfilt_func(tau,tspan,Gfns,Gf_prev)
+% FAGPROJEKT 2022
+% 
+% ARTHUER:
+% Emma Lind, Mona Saleem, Mariana de Sá Madsen
 %
 % GOAL: 
 % To filter high frequency fluctations
@@ -11,10 +15,11 @@ function Gf_ctrlstate = lowfilt_func(tau,tspan,Gfns,Gf_prev)
 %
 % OUTPUT:
 % The low filtered value at the glucose state
-%
+% 
 
 % The equation is from the GRID low filter function
 Gf_ctrlstate = (tspan / ( tau + tspan)) * Gfns + ( 1 - (tspan / (tau + tspan) ) )...
        * Gf_prev ; 
 
 end
+

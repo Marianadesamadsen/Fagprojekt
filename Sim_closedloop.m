@@ -5,9 +5,6 @@ clear all
 clc 
 close all
 
-%% Making path
-% addpath(genpath(fullfile(pwd, './src')));
-
 %% Formatting the plots 
 
 fs = 11; % Font size
@@ -53,6 +50,7 @@ Ts = 5;        % min - Sampling time
 N = (tf - t0)/Ts; % [#]
 
 %% Number of time steps in each control/sampling interval
+
 Nk = 10;
 
 %% Time span

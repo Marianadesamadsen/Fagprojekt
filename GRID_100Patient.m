@@ -32,16 +32,21 @@ mU2U  = 1/U2mU;  % Convert from mU  to U
 
 %% Inizializing parameters
 
-p = [49,47,20.1,0.0106,0.0081,0.0022,1.33,253,47,5]; % Parameters at steady state
+numpatients = 100;
+p=pmatrix(numpatients);
 Gs = 108; % [mg/dL]: Steady state blood glucose concentration
 ts = [];
 
 %% Computing steadty state
 
-[xs, us, flag] = computeSteadyStateMVPModel(ts, p, Gs);
+for i=1:numpatients
+    
+    [xs(i,:), us(i,:), flag] = computeSteadyStateMVPModel(ts, p(:,i), Gs);
 
 % If fsolve did not converge, throw an error
 if(flag ~= 1), error ('fsolve did not converge!'); end
+
+end
 
 %% Intital and final time for the simulation over 30 days
 
@@ -63,10 +68,15 @@ tspan = 5*(0:N);
 x0 = xs;
 
 %% Manipulated inputs
-U = repmat(us, 1, N); % The same bolus and base rate for all
+
+for i=1:100
+    
+    U(:,:,i) = repmat(us(i,:)', 1, N); % The same bolus and base rate for all
+
+end
 
 %% Disturbance variables
-D = zeros(1, N); % No meal assumed
+D = zeros(1, N,numpatients); % No meal assumed
 
 %% Meal and meal bolus at hours 7,12,18
 tMeal1           = 7*h2min;          % [min]
@@ -95,32 +105,43 @@ snack = 20;
 
 % Lopping over 30 days (one month)
 
+for p=1:numpatients
+
 for i = 0:29
     
     % Inserting the different meal sizes at the indcies 
-        D(1, (idxMeal1+24*h2min/Ts*i))   = meal(1+3*i)     /Ts;       % [g CHO/min]
-        U(2, (idxMeal1+24*h2min/Ts*i))   = bolus*U2mU/Ts;  
-        D(1, (idxMeal2+24*h2min/Ts*i))   = meal(2+3*i)     /Ts;       % [g CHO/min]
-        U(2, (idxMeal2+24*h2min/Ts*i))   = bolus*U2mU/Ts;  
-        D(1, (idxMeal3+24*h2min/Ts*i))   = meal(3+3*i)     /Ts;       % [g CHO/min]
-        U(2, (idxMeal3+24*h2min/Ts*i))   = bolus*U2mU/Ts;  
+        D(1, (idxMeal1+24*h2min/Ts*i),p)   = meal(1+3*i)     /Ts;       % [g CHO/min]
+        U(2, (idxMeal1+24*h2min/Ts*i),p)   = bolus*U2mU/Ts;  
+        D(1, (idxMeal2+24*h2min/Ts*i),p)   = meal(2+3*i)     /Ts;       % [g CHO/min]
+        U(2, (idxMeal2+24*h2min/Ts*i),p)   = bolus*U2mU/Ts;  
+        D(1, (idxMeal3+24*h2min/Ts*i),p)   = meal(3+3*i)     /Ts;       % [g CHO/min]
+        U(2, (idxMeal3+24*h2min/Ts*i),p)   = bolus*U2mU/Ts;  
         
     % Inserting the different meal sizes at the indcies 
-        D(1, (idxSnack1+24*h2min/Ts*i))   = snack     /Ts;       % [g CHO/min]
-        U(2, (idxSnack1+24*h2min/Ts*i))   = bolus*U2mU/Ts;  
-        D(1, (idxSnack2+24*h2min/Ts*i))   = snack    /Ts;       % [g CHO/min]
-        U(2, (idxSnack2+24*h2min/Ts*i))   = bolus*U2mU/Ts;  
+        D(1, (idxSnack1+24*h2min/Ts*i),p)   = snack     /Ts;       % [g CHO/min]
+        U(2, (idxSnack1+24*h2min/Ts*i),p)   = bolus*U2mU/Ts;  
+        D(1, (idxSnack2+24*h2min/Ts*i),p)   = snack    /Ts;       % [g CHO/min]
+        U(2, (idxSnack2+24*h2min/Ts*i),p)   = bolus*U2mU/Ts;  
         
+end
+
 end
 
 %% Simulating the control states
 
-[T, X] = OpenLoopSimulation(x0, tspan, U, D, p, @MVPmodel, @ExplicitEuler, Nk);
+for p=1:numpatients
+
+[T(:,:,p), X(:,:,p)] = OpenLoopSimulation(x0(p,:)', tspan, U(:,:,p)', D(:,:,p)', p(:,p)', @MVPmodel, @ExplicitEuler, Nk);
+
+end
 
 %% Blood glucose concentration 
 
-G = CGMsensor(X, p); % [mg/dL] 
+for p=1:numpatients
 
+G(:,:,p) = CGMsensor(X(:,:,p), p(:,p)); % [mg/dL] 
+
+end
 %% GRID
 
 %  
