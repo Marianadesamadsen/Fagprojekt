@@ -70,12 +70,15 @@ if flag > 0
     flag = flag -1;
     zero_one = 0;
 
-elseif flag == 0 && zero_one == 1
+elseif flag == 0 && zero_one == 1;
     
-    flag = 120/tspan;
+    flag = 12;
+    z
     
 end 
-   
+
+    
+    
     
 end
 
@@ -83,6 +86,7 @@ end
 
 
 
+end
 
 
 
